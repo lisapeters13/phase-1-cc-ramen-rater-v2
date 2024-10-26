@@ -1,38 +1,41 @@
-// Callbacks
 const handleClick = (ramen) => {
-  // Update ramen details in the #ramen-detail div when an image is clicked
   document.querySelector('#ramen-detail img').src = ramen.image;
   document.querySelector('#ramen-detail .name').textContent = ramen.name;
   document.querySelector('#ramen-detail .restaurant').textContent = ramen.restaurant;
-  document.querySelector('#ramen-detail .rating').textContent = ramen.rating;
-  document.querySelector('#ramen-detail .comment').textContent = ramen.comment;
-};
 
+  // Corrected: Update the right elements for rating and comment
+  document.querySelector('#rating-display').textContent = ramen.rating.toString(); 
+  document.querySelector('#comment-display').textContent = ramen.comment; 
+};
 const addSubmitListener = () => {
   const form = document.getElementById('new-ramen');
   form.addEventListener('submit', (event) => {
-    event.preventDefault();  // Prevent the form from submitting the default way
-    
-    // Create a new ramen object based on the form inputs
+     event.preventDefault();  // Prevent form submission
+
     const newRamen = {
       name: event.target['name'].value,
       restaurant: event.target['restaurant'].value,
       image: event.target['image'].value,
       rating: event.target['rating'].value,
-      comment: event.target['comment'].value
+      comment: event.target['new-comment'].value
     };
 
-    // Create a new image element for the new ramen
+    // Create new ramen img element
     const img = document.createElement('img');
     img.src = newRamen.image;
-    img.alt = newRamen.name; // Adding alt text for accessibility
-    img.addEventListener('click', () => handleClick(newRamen));  // Handle ramen click
-    document.getElementById('ramen-menu').appendChild(img);  // Append new ramen to the menu
+    img.alt = newRamen.name; 
+    img.addEventListener('click', () => handleClick(newRamen)); 
+    document.getElementById('ramen-menu').appendChild(img);
 
-    form.reset(); // Reset the form after submission
+    form.reset(); // Reset form
+
+    // After creating new ramen, automatically update the ramen detail section
+    handleClick(newRamen);  // Ensures newly created ramen is displayed immediately
   });
 };
 
+
+// The main function to display all ramen images
 const displayRamens = () => {
   fetch('http://localhost:3000/ramens')
     .then(response => response.json())
